@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>คุณคือเมะหรือเคะ?</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f3efff;--card:#fff;--tx:#2b2250;--sub:#7a7399;--pri:#7c5cff;--pri2:#5b3df0;--bar:#ececf8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17132b;--card:#241e42;--tx:#f1eeff;--sub:#a9a2cc;--bar:#3a3360}}
+:root[data-theme="dark"]{--bg:#17132b;--card:#241e42;--tx:#f1eeff;--sub:#a9a2cc;--bar:#3a3360}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;min-height:100vh;display:flex;justify-content:center}
+.wrap{width:100%;max-width:440px;padding:20px 16px 40px;text-align:center}
+.card{background:var(--card);border-radius:24px;padding:24px 18px;box-shadow:0 8px 30px rgba(90,60,200,.12)}
+.big{font-size:80px;line-height:1.1}
+h1{font-size:25px;margin:8px 0}h2{font-size:19px;margin:12px 0 14px}
+p{color:var(--sub);margin:6px 0}
+button,input{font:inherit}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:14px;margin-top:10px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+.btn.g{background:var(--bar);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--bar);background:transparent;color:var(--tx);border-radius:14px;padding:12px 14px;margin-top:9px;cursor:pointer;font-size:15px}
+.opt:active{border-color:var(--pri);background:var(--bar)}
+input{width:100%;padding:13px;border-radius:14px;border:2px solid var(--bar);background:transparent;color:var(--tx);margin-top:14px;text-align:center}
+.prog{height:8px;background:var(--bar);border-radius:8px;overflow:hidden;margin-bottom:6px}
+.prog i{display:block;height:100%;background:var(--pri);width:0;transition:width .3s}
+.row{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-top:18px}
+.bar{height:10px;border-radius:10px;background:var(--bar);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff6b9a,#ff5a6a)}
+.flag{background:var(--bg);border-radius:16px;padding:14px;margin-top:14px;font-size:14px}
+.hide{display:none}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}td{border-bottom:1px solid var(--bar);padding:6px;text-align:left}
+</style></head><body><div class="wrap">
+
+<div id="s0" class="card">
+  <div class="big">🐺🐰</div>
+  <h1>คุณคือเมะหรือเคะ?</h1>
+  <p>แบบทดสอบสุดฮิต ตอบตามสัญชาตญาณ ห้ามคิดมาก!</p>
+  <input id="nm" placeholder="ชื่อเล่นของคุณ" maxlength="30">
+  <button class="btn" onclick="start()">เริ่มเลย</button>
+</div>
+
+<div id="s1" class="card hide">
+  <div class="prog"><i id="pg"></i></div>
+  <p id="cnt"></p><h2 id="q"></h2><div id="ops"></div>
+</div>
+
+<div id="s3" class="card hide"><div class="big">🔮</div><h2>กำลังวิเคราะห์จิตวิญญาณของคุณ...</h2><p>อย่าเพิ่งปิดหน้านี้นะ</p></div>
+
+<div id="s2" class="card hide">
+  <div class="big" id="re"></div>
+  <p>คุณคือ...</p>
+  <h1 id="rn" style="color:var(--pri)"></h1>
+  <div class="flag" id="rd"></div>
+  <div class="row"><span id="la"></span><span id="lb"></span></div>
+  <div class="bar"><i id="bf"></i></div>
+  <button class="btn" onclick="send()">แชร์ผลให้เพื่อนดู 💌</button>
+  <button class="btn g" onclick="location.reload()">ลองอีกครั้ง</button>
+  <p id="msg" style="margin-top:12px"></p>
+</div>
+
+<div id="s4" class="card hide"><h2>ตารางถอดรหัส</h2><div id="dec"></div></div>
+</div>
+<script>
+var COL=[["ฟ้าน้ำเงิน","ใจเย็น"],["ชมพู","หน้าหวาน"],["แดง","ดุแต่ใจดี"],["ขาวดำ","ลึกลับ"],["เหลืองส้ม","ร่าเริง"],["ม่วง","ดราม่า"],["เขียว","ธงเขียว"]];
+var ANI=[["หมา","🐶","ขี้อ้อน"],["แมว","🐱","มีหนวด"],["กระต่าย","🐰","หูตก"],["หมี","🐻","ตัวใหญ่ใจดี"]];
+var MET=[["สีเงิน","เคะ"],["สีทอง","เมะ"]];
+var FL=["ธงเขียว — เป็นที่พักพิงที่ปลอดภัย รักเดียวใจเดียว","ธงเขียว — อ่อนโยน ใจดี แต่ตอนหิวอย่าเข้าใกล้","ธงเขียวอมเหลือง — น่ารักมาก แต่ชอบหายไปตอนเที่ยงคืน","ธงเขียว — เพื่อนๆ ลงความเห็นว่าอยู่ด้วยแล้วสบายใจ"];
+// r: c=สี, m=เงิน/ทอง, a=สัตว์
+var Q=[
+{q:"เจอแมลงสาบบินเข้าห้อง คุณทำอะไร?",o:["กรี๊ดแล้ววิ่งออกจากห้อง","ใช้รองเท้าฟาดอย่างเด็ดขาด","ยอมรับว่ามันคือเพื่อนร่วมห้อง","ปิดไฟนอนเลย ไม่เห็นก็ไม่มี"]},
+{q:"ส่งข้อความผิดแชทไปให้คนที่ไม่ควรเห็น?",o:["กดลบแล้วทำเป็นไม่รู้ไม่ชี้","ย้ายไปเลี้ยงแพะที่ต่างจังหวัด","ส่งสติ๊กเกอร์ตบหน้าตัวเอง"]},
+{q:"วันเกิดตัวเอง อยากได้อะไรมากที่สุด?",o:["เงินสดล้วนๆ","ของกินเยอะๆ","เพื่อนจำได้ก็พอแล้ว","เค้กหน้าตาแปลกๆ"]},
+{q:"ถ้ามีวันหยุด 1 วันแบบไม่มีใครรบกวน?",o:["นอนยาวถึงบ่าย","ดูซีรีส์รวดเดียวจบ","ออกไปหาของกินแปลกๆ","จัดห้องจนเหนื่อยแล้วหลับ"]},
+{q:"สีที่ใช่ที่สุดสำหรับคุณคือสีอะไร?",r:"c",o:COL.map(function(x,i){return[x[0],i]})},
+{q:"ตื่นสายแล้วจะไปสาย ขั้นตอนแรกคือ?",o:["แปรงฟันไปด้วยวิ่งไปด้วย","โทรหาเพื่อนให้ช่วยเช็คชื่อ","คิดเลขว่าสายไป 15 นาทีไม่เป็นไร"]},
+{q:"เพื่อนทักมาว่า 'ว่างไหม' คุณคิดอะไรเป็นอย่างแรก?",o:["ต้องมีเรื่องให้ช่วยแน่ๆ","ชวนไปกินข้าวหรือเปล่า","ไม่ตอบทันที ปล่อยให้ลุ้นก่อน"]},
+{q:"ถ้าได้พลังวิเศษ 1 อย่าง?",o:["หายตัวได้","อ่านใจคนได้","กินเท่าไหร่ก็ไม่อ้วน","เสกเงินได้"]},
+{q:"เครื่องประดับที่อยากใส่ติดตัวทุกวัน?",r:"m",o:MET.map(function(x,i){return[i?"สีทอง ✨":"สีเงิน 🌙",i]})},
+{q:"แอบกินของเพื่อนในตู้เย็น คุณคือสายไหน?",o:["กินแล้วหาซื้อมาคืน","กินแล้วแกล้งโง่","ไม่กิน แต่แอบมองทุกครั้ง"]},
+{q:"เปิดมือถือแล้วแบตเหลือ 1% คุณจะ?",o:["วิ่งหาที่ชาร์จทันที","ปล่อยไปตามยถากรรม","เปิดโหมดประหยัดแล้วภาวนา"]},
+{q:"ฝนตกหนักตอนกลับบ้าน ไม่มีร่ม?",o:["วิ่งฝ่าฝนแบบพระเอก","รอจนกว่าฝนหยุดที่ร้านกาแฟ","ยืมร่มเพื่อนแล้วลืมคืน"]},
+{q:"ถ้าต้องเลือกสัตว์มาเป็นเพื่อนข้างกาย?",r:"a",o:ANI.map(function(x,i){return[x[1]+" "+x[0],i]})},
+{q:"เสียงปลุกที่คุณชอบที่สุด?",o:["เพลงเศร้าเพราะๆ","เสียงเตือนแรงๆ ให้ตกใจ","ไม่ตั้งเลย ตื่นเองตามธรรมชาติ"]},
+{q:"ถูกลอตเตอรี่ 100 บาท จะทำอะไร?",o:["ซื้อลอตเตอรี่ต่อ","เลี้ยงข้าวเพื่อนคนเดียว","เก็บไว้ดูเล่นเฉยๆ","กินชานมไข่มุกสบายใจ"]},
+{q:"เมนูที่กินได้ทุกวันไม่เบื่อ?",o:["ข้าวผัด","ก๋วยเตี๋ยว","ของทอดทุกชนิด","ไอศกรีม"]},
+{q:"ถ้าเพื่อนเมาแล้วร้องเพลงกลางร้าน?",o:["ร้องเป็นเพื่อน","ถ่ายคลิปเก็บไว้","แกล้งไม่รู้จัก","ลากกลับบ้านทันที"]},
+{q:"คำพูดที่ใช้บ่อยที่สุดในชีวิต?",o:["ช่างมัน","เดี๋ยวก็ได้","ไม่เป็นไร","โอเคๆ"]}
+];
+var i=0,sel={},name="";
+function $(x){return document.getElementById(x)}
+function show(n){for(var j=0;j<5;j++)$("s"+j).classList.toggle("hide",j!==n)}
+function start(){name=$("nm").value.trim()||"ไม่ระบุชื่อ";i=0;sel={};show(1);ask()}
+function ask(){
+  var c=Q[i];$("cnt").textContent=(i+1)+" / "+Q.length;$("pg").style.width=(i/Q.length*100)+"%";
+  $("q").textContent=c.q;$("ops").innerHTML="";
+  c.o.forEach(function(o){var t=typeof o==="string"?o:o[0],b=document.createElement("button");b.className="opt";b.textContent=t;
+    b.onclick=function(){if(c.r)sel[c.r]=o[1];i++;i<Q.length?ask():(show(3),setTimeout(done,1800))};$("ops").appendChild(b)});
+}
+function done(){
+  var m=MET[sel.m],c=COL[sel.c],a=ANI[sel.a];
+  var res=m[1]+c[1]+a[2];
+  $("re").textContent=a[1];$("rn").textContent=res;
+  $("rd").textContent=FL[Math.floor(Math.random()*FL.length)];
+  var p=55+Math.floor(Math.random()*35);
+  $("la").textContent=(m[1]=="เคะ"?"เคะ ":"เมะ ")+p+"%";$("lb").textContent=(100-p)+"% "+(m[1]=="เคะ"?"เมะ":"เคะ");
+  $("bf").style.width=p+"%";
+  window.RESULT="ผลของ "+name+": "+res;
+  show(2);
+}
+function send(){
+  var t=window.RESULT;
+  function ok(){$("msg").textContent="คัดลอกแล้ว! วางส่งในแชทได้เลย"}
+  function fb(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();
+    try{document.execCommand("copy");ok()}catch(e){$("msg").textContent="คัดลอกไม่สำเร็จ ลองแคปหน้าจอแทนนะ"}document.body.removeChild(a)}
+  try{if(navigator.share){navigator.share({text:t}).catch(function(){})}
+    else if(navigator.clipboard){navigator.clipboard.writeText(t).then(ok,fb)}else fb()}catch(e){fb()}
+}
+if(location.hash=="#decode"){
+  var h="<table><tr><td><b>ขึ้นต้น</b></td><td>"+MET.map(function(x){return x[1]+" = "+x[0]}).join(", ")+"</td></tr>";
+  h+="<tr><td><b>คำกลาง = สีที่ชอบ</b></td><td>"+COL.map(function(x){return x[1]+" = "+x[0]}).join("<br>")+"</td></tr>";
+  h+="<tr><td><b>ท้าย = สัตว์</b></td><td>"+ANI.map(function(x){return x[2]+" = "+x[0]}).join("<br>")+"</td></tr></table>";
+  $("dec").innerHTML=h;show(4);
+}
+</script></body></html>
